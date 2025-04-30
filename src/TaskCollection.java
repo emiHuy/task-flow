@@ -60,6 +60,13 @@ public class TaskCollection implements java.io.Serializable{
         return categories.add(category);
     }
 
+    public void deleteCategory(String category) {
+        for (Task t: getTasksByCategory(category)) {
+            tasks.remove(t);
+        }
+        categories.remove(category);
+    }
+
     public boolean addTask(Task task) {
         if (tasks.add(task)) {
             return true;

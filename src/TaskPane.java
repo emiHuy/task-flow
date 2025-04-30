@@ -1,3 +1,4 @@
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import java.time.LocalDate;
@@ -9,6 +10,7 @@ public class TaskPane extends Pane {
     private ToDoListView mainView;
     private Label header;
     private ArrayList<TaskCheckBox> checkBoxes;
+    private Button deleteCategoryButton;
 
     public TaskPane(TaskCollection model, ToDoListView mainView) {
         this.model = model;
@@ -21,12 +23,21 @@ public class TaskPane extends Pane {
 
         checkBoxes = new ArrayList<TaskCheckBox>();
 
+        deleteCategoryButton = new Button("Delete Category");
+        deleteCategoryButton.relocate(405,850);
+        deleteCategoryButton.setPrefSize(150,30);
+        deleteCategoryButton.setStyle("-fx-font-size: 14px; -fx-font-family: helvetica;");
+        deleteCategoryButton.setVisible(false);
+
         setStyle("-fx-background-color: rgb(220,220,220)");
-        getChildren().add(header);
+        getChildren().addAll(header, deleteCategoryButton);
     }
 
     public ArrayList<TaskCheckBox> getCheckBoxes() {
         return checkBoxes;
+    }
+    public Button getDeleteCategoryButton() {
+        return deleteCategoryButton;
     }
 
     public void displayOverdueTasks() {
@@ -37,6 +48,7 @@ public class TaskPane extends Pane {
     }
     public void displayCategoryTasks(String category) {
         displayTasks(category, model.getTasksByCategory(category), "There are no tasks in this category.");
+        deleteCategoryButton.setVisible(true);
     }
     public void displayAllTasks() {
         displayTasks("All Tasks", model.getTasks(), "There are no tasks scheduled.");
@@ -96,8 +108,9 @@ public class TaskPane extends Pane {
 
     private void setUp(String headerText) {
         checkBoxes.clear();
-        getChildren().removeIf(node -> node != header);
+        getChildren().removeIf(node -> node != header && !node.equals(deleteCategoryButton));
         header.setText(headerText);
+        deleteCategoryButton.setVisible(false);
     }
 
     private int createLabel(String text, int fontSize, int y, int gap, boolean textFillRed) {

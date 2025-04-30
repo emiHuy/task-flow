@@ -4,7 +4,9 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.stage.Stage;
-
+import javax.swing.*;
+import javax.swing.plaf.FontUIResource;
+import java.awt.*;
 import java.time.LocalDate;
 
 public class ToDoListApp extends Application {
@@ -28,22 +30,22 @@ public class ToDoListApp extends Application {
         linkCheckBoxEventHandler();
 
         view.getSideMenu().getAddTaskButton().setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent actionEvent) {handleAddTaskButton();}
+            public void handle(ActionEvent actionEvent) {handleSideMenuButton(actionEvent);}
         });
         view.getSideMenu().getTodayButton().setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent actionEvent) {handleTodayTasksButton();}
+            public void handle(ActionEvent actionEvent) {handleSideMenuButton(actionEvent);}
         });
         view.getSideMenu().getAllTasksButton().setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent actionEvent) {handleAllTasksButton();}
+            public void handle(ActionEvent actionEvent) {handleSideMenuButton(actionEvent);}
         });
         view.getSideMenu().getOverdueTasksButton().setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent actionEvent) {handleOverdueTasksButton();}
+            public void handle(ActionEvent actionEvent) {handleSideMenuButton(actionEvent);}
         });
         view.getSideMenu().getSortTypeComboBox().setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent actionEvent) {handleFiltersAndSorting();}
         });
         view.getSideMenu().getCategoryPane().getAddCategoryButton().setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent actionEvent) {handleAddCategoryButton();}
+            public void handle(ActionEvent actionEvent) {handleSideMenuButton(actionEvent);}
         });
         view.getAddTaskPane().getCreateTaskButton().setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent actionEvent) {handleCreateTaskButton();}
@@ -51,89 +53,56 @@ public class ToDoListApp extends Application {
         view.getAddCategoryPane().getCreateCategoryButton().setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent actionEvent) {handleCreateCategoryButton();}
         });
+        view.getTaskPane().getDeleteCategoryButton().setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent actionEvent) {handleDeleteCategoryButton();}
+        });
     }
 
-    public void linkFilterEventHandler() {
+    private void linkFilterEventHandler() {
         for (CheckBox c: view.getSideMenu().getFilters()) {
             c.setOnAction(new EventHandler<ActionEvent>() {
                 public void handle(ActionEvent actionEvent) {handleFiltersAndSorting();}
             });
         }
     }
-    public void linkCategoryButtonEventHandler() {
+    private void linkCategoryButtonEventHandler() {
         for (SideMenuButton c: view.getSideMenu().getCategoryPane().getCategoryButtons()) {
             c.setOnAction(new EventHandler<ActionEvent>() {
-                public void handle(ActionEvent actionEvent) {handleCategoryButton(actionEvent);}
+                public void handle(ActionEvent actionEvent) {handleSideMenuButton(actionEvent);}
             });
         }
     }
-    public void linkCheckBoxEventHandler() {
+    private void linkCheckBoxEventHandler() {
         for (CheckBox c: view.getTaskPane().getCheckBoxes()) {
             c.setOnAction(new EventHandler<ActionEvent>() {
                 public void handle(ActionEvent actionEvent) {handleCheckBox(actionEvent);}});
         }
     }
 
-    public void handleAddTaskButton() {
-        view.hidePane(view.getAddCategoryPane());
-        view.update(view.getSideMenu().getAddTaskButton());
-        view.getAddTaskPane().setVisible(true);
-    }
-
-    public void handleTodayTasksButton() {
-        view.hidePane(view.getAddCategoryPane());
-        view.hidePane(view.getAddTaskPane());
-        view.update(view.getSideMenu().getTodayButton());
-        linkCheckBoxEventHandler();
-    }
-
-    public void handleAllTasksButton() {
-        view.hidePane(view.getAddCategoryPane());
-        view.hidePane(view.getAddTaskPane());
-        view.update(view.getSideMenu().getAllTasksButton());
-        linkCheckBoxEventHandler();
-    }
-
-    public void handleOverdueTasksButton() {
-        view.hidePane(view.getAddCategoryPane());
-        view.hidePane(view.getAddTaskPane());
-        view.update(view.getSideMenu().getOverdueTasksButton());
-        linkCheckBoxEventHandler();
-    }
-
-    public void handleAddCategoryButton() {
-        view.hidePane(view.getAddTaskPane());
-        view.update(view.getSideMenu().getCategoryPane().getAddCategoryButton());
-        view.getAddCategoryPane().setVisible(true);
-    }
-
-    public void handleCategoryButton(ActionEvent actionEvent) {
-        view.hidePane(view.getAddTaskPane());
-        view.hidePane(view.getAddCategoryPane());
-        SideMenuButton b = (SideMenuButton) actionEvent.getSource();
-        view.update(b);
-        linkCheckBoxEventHandler();
-    }
-
-    public void handleFiltersAndSorting() {
+    private void handleFiltersAndSorting() {
         view.update(null);
         linkCheckBoxEventHandler();
     }
 
-    public void handleCheckBox(ActionEvent actionEvent) {
+    private void handleCheckBox(ActionEvent actionEvent) {
         Task t = ((TaskCheckBox)actionEvent.getSource()).getReference();
         model.completeTask(t);
         view.update(null);
         linkCheckBoxEventHandler();
     }
 
-    public void handleCreateTaskButton() {
+    private void handleSideMenuButton(ActionEvent actionEvent) {
+        view.update((SideMenuButton)actionEvent.getSource());
+        linkCheckBoxEventHandler();
+    }
+
+    private void handleCreateTaskButton() {
         AddTaskPane pane = view.getAddTaskPane();
         String action = pane.getActionTextField().getText();
         int priority = pane.getPriorityComboBox().getSelectionModel().getSelectedIndex() + 1;
         LocalDate date = pane.getDatePicker().getValue();
         String category = (String)pane.getCategoryComboBox().getSelectionModel().getSelectedItem();
-        if (!action.equals("") && model.addTask(new Task(action, priority, date, category))) {
+        if (!action.equals("") && model.addTask(new Task(action,priority,date,category))) {
             view.getAddTaskPane().reset();
             view.getAddTaskPane().displayOutcome(true);
         } else {
@@ -141,7 +110,7 @@ public class ToDoListApp extends Application {
         }
     }
 
-    public void handleCreateCategoryButton() {
+    private void handleCreateCategoryButton() {
         String category = view.getAddCategoryPane().getCategoryTextField().getText();
         if (!category.equals("") && !category.equals("+ Category") && model.addCategory(category)) {
             view.getAddCategoryPane().reset();
@@ -151,6 +120,19 @@ public class ToDoListApp extends Application {
             linkCategoryButtonEventHandler();
         } else {
             view.getAddCategoryPane().displayOutcome(false);
+        }
+    }
+
+    private void handleDeleteCategoryButton() {
+        UIManager.put("OptionPane.messageFont", new FontUIResource(new Font("Helvetica", Font.PLAIN, 14)));
+        int confirmation = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this category? \n All tasks in this category will be deleted.","Category Deletion Confirmation",JOptionPane.YES_NO_OPTION);
+        if (confirmation == 0) {
+            model.deleteCategory(view.getCurrentSelection().getText());
+            view.update(view.getSideMenu().getAllTasksButton());
+            view.getAddTaskPane().updateCategoryOptions();
+            view.getSideMenu().getCategoryPane().update();
+            linkCheckBoxEventHandler();
+            linkCategoryButtonEventHandler();
         }
     }
 

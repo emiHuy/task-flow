@@ -85,7 +85,7 @@ public class AddTaskPane extends Pane implements ResettablePane {
         outcomeLabel.setVisible(false);
         priorityComboBox.getSelectionModel().select(0);
         datePicker.setValue(LocalDate.now());
-        categoryComboBox.getSelectionModel().select("Miscellaneous");
+        categoryComboBox.getSelectionModel().select(0);
     }
 
     public void displayOutcome(boolean isSuccessful) {

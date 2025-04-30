@@ -8,11 +8,12 @@ public class ToDoListView extends Pane {
     private TaskPane taskPane;
     private AddTaskPane addTaskPane;
     private AddCategoryPane addCategoryPane;
+    private SideMenuButton currentSelection;
 
     public ToDoListView(TaskCollection model) {
         // side menu
         sideMenu = new SideMenu(model);
-        setPane(sideMenu, 0, 0, 225);
+        setPane(sideMenu, 0, 225);
 
         // task and task scroll panes
         taskPane = new TaskPane(model,this);
@@ -25,14 +26,16 @@ public class ToDoListView extends Pane {
 
         // add task pane
         addTaskPane = new AddTaskPane(model);
-        setPane(addTaskPane, 225, 0, 575);
+        setPane(addTaskPane, 225, 575);
         addTaskPane.setVisible(false);
         addTaskPane.reset();
 
         // add category pane
         addCategoryPane = new AddCategoryPane();
-        setPane(addCategoryPane, 225, 0, 575);
+        setPane(addCategoryPane, 225, 575);
         addCategoryPane.setVisible(false);
+
+        currentSelection = sideMenu.getTodayButton();
 
         update(sideMenu.getTodayButton());
         getChildren().addAll(sideMenu, taskScrollPane, addTaskPane, addCategoryPane);
@@ -50,41 +53,50 @@ public class ToDoListView extends Pane {
     public AddCategoryPane getAddCategoryPane() {
         return addCategoryPane;
     }
-
-    public void hidePane(ResettablePane pane) {
-        pane.reset();
-        pane.setVisible(false);
+    public SideMenuButton getCurrentSelection() {
+        return currentSelection;
     }
 
-    public void update(Button selectedButton) {
+    public void update(SideMenuButton selectedButton) {
         updateSideMenu(selectedButton);
         updateTaskPane();
     }
 
-    private void updateSideMenu(Button selectedButton) {
-        if (sideMenu.getTodayButton().equals(selectedButton)) {
+    private void updateSideMenu(SideMenuButton selectedButton) {
+        if (selectedButton != null) {
+            currentSelection.deselect();
+            selectedButton.select();
+            currentSelection = selectedButton;
+        }
+
+        if (sideMenu.getTodayButton().isSelected()) {
             sideMenu.getSortTypeComboBox().setDisable(true);
         } else {
             sideMenu.getSortTypeComboBox().setDisable(false);
         }
+
         if (sideMenu.getSortTypeComboBox().getSelectionModel().getSelectedItem().equals("priority")) {
             sideMenu.disableFilters(false);
         } else {
             sideMenu.disableFilters(true);
         }
-        if (selectedButton != null) {
-            updateButtons(selectedButton);
+
+        if (sideMenu.getAddTaskButton().isSelected()) {
+            addTaskPane.setVisible(true);
+        } else {
+            hidePane(addTaskPane);
+        }
+
+        if (sideMenu.getCategoryPane().getAddCategoryButton().isSelected()) {
+            addCategoryPane.setVisible(true);
+        } else {
+            hidePane(addCategoryPane);
         }
     }
 
-    private void updateButtons(Button selectedButton) {
-        for (SideMenuButton b: sideMenu.getAllButtons()) {
-            if (b.equals(selectedButton)) {
-                b.select();
-            } else {
-                b.deselect();
-            }
-        }
+    private void hidePane(ResettablePane pane) {
+        pane.reset();
+        pane.setVisible(false);
     }
 
     private void updateTaskPane() {
@@ -103,8 +115,8 @@ public class ToDoListView extends Pane {
         }
     }
 
-    private void setPane(Pane pane, int x, int y, int width) {
-        pane.relocate(x,y);
+    private void setPane(Pane pane, int x, int width) {
+        pane.relocate(x,0);
         pane.setPrefSize(width,900);
     }
 }
