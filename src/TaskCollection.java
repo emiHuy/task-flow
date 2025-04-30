@@ -4,21 +4,16 @@ import java.util.TreeSet;
 
 public class TaskCollection {
     private TreeSet<Task> tasks;
-    private int tasksCompleted;
     private TreeSet<String> categories;
 
     public TaskCollection() {
         tasks = new TreeSet<Task>();
-        tasksCompleted = 0;
         categories = new TreeSet<String>();
         categories.add("Miscellaneous");
     }
 
-    public TreeSet<Task> getTasks() {
-        return tasks;
-    }
-    public int getTasksCompleted() {
-        return tasksCompleted;
+    public ArrayList<Task> getTasks() {
+        return new ArrayList<Task>(tasks);
     }
     public TreeSet<String> getCategories() {
         return categories;
@@ -31,27 +26,12 @@ public class TaskCollection {
         return false;
     }
 
-    public boolean deleteTask(Task task) {
-        if (tasks.contains(task)) {
+    public boolean completeTask(Task task) {
+        if (task != null && tasks.contains(task)) {
             tasks.remove(task);
             return true;
         }
         return false;
-    }
-
-    public void completeTask(Task t) {
-        t.setCompleted(true);
-        tasksCompleted++;
-    }
-
-    public void undoCompleteTask(Task t) {
-        t.setCompleted(false);
-        tasksCompleted--;
-    }
-
-    public void editTaskDetails(Task t, String action, int priority) {
-        t.setAction(action);
-        t.setPriority(priority);
     }
 
     public boolean addCategory(String category) {
@@ -68,9 +48,9 @@ public class TaskCollection {
         return tasksOnDate;
     }
 
-    public ArrayList<Task> getTasksByPriority(int priority) {
+    public ArrayList<Task> getTasksByPriority(ArrayList<Task> taskList, int priority) {
         ArrayList<Task> tasksWithPriority= new ArrayList<Task>();
-        for (Task t: tasks) {
+        for (Task t: taskList) {
             if (t.getPriority() == priority) {
                 tasksWithPriority.add(t);
             }
@@ -86,5 +66,15 @@ public class TaskCollection {
             }
         }
         return tasksInCategory;
+    }
+
+    public ArrayList<Task> getOverdueTasks() {
+        ArrayList<Task> overdueTasks = new ArrayList<Task>();
+        for (Task t: tasks) {
+            if (t.getDate().compareTo(LocalDate.now()) < 0) {
+                overdueTasks.add(t);
+            }
+        }
+        return overdueTasks;
     }
 }
