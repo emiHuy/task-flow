@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.scene.input.MouseEvent;
 import model.Task;
 import model.TaskCollection;
 import view.ToDoListView;
@@ -33,28 +34,12 @@ public class ToDoListApp extends Application {
         primaryStage.setScene(new Scene(view,800,900));
         primaryStage.show();
 
-        // link event handlers to components
-        linkCategoryButtonEventHandler();
+        linkSideMenuButtonEventHandler();
         linkFilterEventHandler();
         linkCheckBoxEventHandler();
 
-        view.getSideMenu().getAddTaskButton().setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent actionEvent) {handleSideMenuButton(actionEvent);}
-        });
-        view.getSideMenu().getTodayButton().setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent actionEvent) {handleSideMenuButton(actionEvent);}
-        });
-        view.getSideMenu().getAllTasksButton().setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent actionEvent) {handleSideMenuButton(actionEvent);}
-        });
-        view.getSideMenu().getOverdueTasksButton().setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent actionEvent) {handleSideMenuButton(actionEvent);}
-        });
         view.getSideMenu().getSortTypeComboBox().setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent actionEvent) {handleFiltersAndSorting();}
-        });
-        view.getSideMenu().getCategoryPane().getAddCategoryButton().setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent actionEvent) {handleSideMenuButton(actionEvent);}
         });
         view.getAddTaskPane().getCreateTaskButton().setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent actionEvent) {handleCreateTaskButton();}
@@ -67,18 +52,23 @@ public class ToDoListApp extends Application {
         });
         primaryStage.setOnCloseRequest(event -> {model.writeData();});
     }
-
+    private void linkSideMenuButtonEventHandler() {
+        for (SideMenuButton b: view.getSideMenu().getAllButtons()) {
+            b.setOnAction(new EventHandler<ActionEvent>() {
+                public void handle(ActionEvent actionEvent) {handleSideMenuButton(actionEvent);}
+            });
+            b.setOnMouseEntered(new EventHandler<MouseEvent>() {
+                public void handle(MouseEvent mouseEvent) {b.hover(true);}
+            });
+            b.setOnMouseExited(new EventHandler<MouseEvent>() {
+                public void handle(MouseEvent mouseEvent) {b.hover(false);}
+            });
+        }
+    }
     private void linkFilterEventHandler() {
         for (CheckBox c: view.getSideMenu().getFilters()) {
             c.setOnAction(new EventHandler<ActionEvent>() {
                 public void handle(ActionEvent actionEvent) {handleFiltersAndSorting();}
-            });
-        }
-    }
-    private void linkCategoryButtonEventHandler() {
-        for (SideMenuButton c: view.getSideMenu().getCategoryPane().getCategoryButtons()) {
-            c.setOnAction(new EventHandler<ActionEvent>() {
-                public void handle(ActionEvent actionEvent) {handleSideMenuButton(actionEvent);}
             });
         }
     }
@@ -127,7 +117,7 @@ public class ToDoListApp extends Application {
             view.getAddCategoryPane().displayOutcome(true);
             view.getAddTaskPane().updateCategoryOptions();
             view.getSideMenu().getCategoryPane().update();
-            linkCategoryButtonEventHandler();
+            linkSideMenuButtonEventHandler();
         } else {
             view.getAddCategoryPane().displayOutcome(false);
         }
@@ -142,7 +132,7 @@ public class ToDoListApp extends Application {
             view.getAddTaskPane().updateCategoryOptions();
             view.getSideMenu().getCategoryPane().update();
             linkCheckBoxEventHandler();
-            linkCategoryButtonEventHandler();
+            linkSideMenuButtonEventHandler();
         }
     }
 

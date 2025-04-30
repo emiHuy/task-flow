@@ -28,4 +28,14 @@ public class SideMenuButton extends Button {
         setStyle("-fx-font-size: " + fontSize + "px; -fx-font-family: helvetica; -fx-background-color: transparent; -fx-alignment: center_left;");
         selected = false;
     }
+
+    public void hover(boolean hover) {
+        if (hover) {
+            setStyle("-fx-font-size: " + fontSize + "px; -fx-font-family: helvetica; -fx-background-color: rgb(70,70,70); -fx-alignment: center_left;");
+        } else if (selected) {
+            setStyle("-fx-font-size: " + fontSize + "px; -fx-font-family: helvetica; -fx-background-color: rgb(50,50,50); -fx-alignment: center_left;");
+        } else {
+            setStyle("-fx-font-size: " + fontSize + "px; -fx-font-family: helvetica; -fx-background-color: transparent; -fx-alignment: center_left;");
+        }
+    }
 }
