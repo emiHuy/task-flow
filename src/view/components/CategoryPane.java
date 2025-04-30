@@ -30,7 +30,7 @@ public class CategoryPane extends Pane {
 
         // create pane containing task category buttons
         categoryListPane = new Pane();
-        categoryListPane.setStyle("-fx-background-color: rgb(30,30,30); -fx-background: rgb(30,30,30);");
+        categoryListPane.setStyle("-fx-background-color: rgb(30,30,30);");
 
         // create scroll pane to allow scrolling of categoryListPane as needed (if there are many category buttons)
         ScrollPane categoryListScrollPane = new ScrollPane();
@@ -38,7 +38,7 @@ public class CategoryPane extends Pane {
         categoryListScrollPane.setContent(categoryListPane);
         categoryListScrollPane.setPrefSize(225,370);
         categoryListScrollPane.setFitToWidth(true);
-        categoryListScrollPane.setStyle("-fx-background-color: rgb(30,30,30); -fx-background: rgb(30,30,30);");
+        categoryListScrollPane.setStyle("-fx-background-color: rgb(30,30,30); -fx-background: rgb(30,30,30); -fx-padding: 0;");
 
         categoryButtons = new ArrayList<SideMenuButton>();
 
