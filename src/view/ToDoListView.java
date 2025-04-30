@@ -77,17 +77,8 @@ public class ToDoListView extends Pane {
             currentSelection = selectedButton;
         }
 
-        if (sideMenu.getTodayButton().isSelected()) {
-            sideMenu.getSortTypeComboBox().setDisable(true);
-        } else {
-            sideMenu.getSortTypeComboBox().setDisable(false);
-        }
-
-        if (sideMenu.getSortTypeComboBox().getSelectionModel().getSelectedItem().equals("priority")) {
-            sideMenu.disableFilters(false);
-        } else {
-            sideMenu.disableFilters(true);
-        }
+        sideMenu.getSortTypeComboBox().setDisable(sideMenu.getTodayButton().isSelected());
+        sideMenu.disableFilters(!sideMenu.getSortTypeComboBox().getSelectionModel().getSelectedItem().equals("priority") && !sideMenu.getTodayButton().isSelected());
 
         if (sideMenu.getAddTaskButton().isSelected()) {
             addTaskPane.setVisible(true);
