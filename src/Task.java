@@ -1,6 +1,6 @@
 import java.time.LocalDate;
 
-public class Task implements Comparable<Task> {
+public class Task implements Comparable<Task>, java.io.Serializable {
     private String action;
     private int priority;
     private LocalDate date;

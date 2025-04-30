@@ -1,20 +1,20 @@
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class TaskPane extends Pane {
-    private Label header;
     private TaskCollection model;
-    private ToDoListView parent;
+    private ToDoListView mainView;
+    private Label header;
     private ArrayList<TaskCheckBox> checkBoxes;
 
-    public TaskPane(TaskCollection model, ToDoListView parent) {
+    public TaskPane(TaskCollection model, ToDoListView mainView) {
         this.model = model;
-        this.parent = parent;
+        this.mainView = mainView;
 
+        // header
         header = new Label();
         header.relocate(20, 15);
         header.setStyle("-fx-font-size: 25px; -fx-font-family: helvetica;");
@@ -32,13 +32,14 @@ public class TaskPane extends Pane {
     public void displayOverdueTasks() {
         displayTasks("Overdue Tasks", model.getOverdueTasks(), "There are no overdue tasks.");
     }
-
     public void displayTodayTasks() {
         displayTasks("Today's Tasks", model.getTasksByDate(LocalDate.now()), "There are no tasks scheduled for today.");
     }
-
     public void displayCategoryTasks(String category) {
         displayTasks(category, model.getTasksByCategory(category), "There are no tasks in this category.");
+    }
+    public void displayAllTasks() {
+        displayTasks("All Tasks", model.getTasks(), "There are no tasks scheduled.");
     }
 
     public void displayTasks(String header, ArrayList<Task> taskList, String emptyMessage) {
@@ -46,27 +47,14 @@ public class TaskPane extends Pane {
         if (taskList.isEmpty()) {
             createLabel(emptyMessage, 17, 65, 0, false);
         }
-        else if (!header.equals("Today's Tasks") && parent.getSideMenu().getSortTypeComboBox().getSelectionModel().getSelectedItem().equals("date")) {
+        else if (!header.equals("Today's Tasks") && mainView.getSideMenu().getSortTypeComboBox().getSelectionModel().getSelectedItem().equals("date")) {
             displayTasksByDate(taskList);
         } else {
             displayTasksByPriority(taskList);
         }
     }
 
-    public void displayTasks() {
-        setUp("All Tasks");
-        ArrayList<Task> tasks = model.getTasks();
-        if (tasks.isEmpty()) {
-            createLabel("There are no tasks scheduled.", 17, 65, 0, false);
-        }
-        else if (parent.getSideMenu().getSortTypeComboBox().getSelectionModel().getSelectedItem().equals("date")) {
-            displayTasksByDate(tasks);
-        } else {
-            displayTasksByPriority(tasks);
-        }
-    }
-
-    public void displayTasksByDate(ArrayList<Task> taskList) {
+    private void displayTasksByDate(ArrayList<Task> taskList) {
         int y = 65;
         LocalDate previousDate = null;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy");
@@ -82,20 +70,20 @@ public class TaskPane extends Pane {
         }
     }
 
-    public void displayTasksByPriority(ArrayList<Task> taskList) {
+    private void displayTasksByPriority(ArrayList<Task> taskList) {
         int y = 65;
-        if (parent.getSideMenu().getHighCheckBox().isSelected()) {
+        if (mainView.getSideMenu().getHighCheckBox().isSelected()) {
             y = displayPriorityGroup("High",y,model.getTasksByPriority(taskList,1));
         }
-        if (parent.getSideMenu().getMediumCheckBox().isSelected()) {
+        if (mainView.getSideMenu().getMediumCheckBox().isSelected()) {
             y = displayPriorityGroup("Medium",y,model.getTasksByPriority(taskList,2));
         }
-        if (parent.getSideMenu().getLowCheckBox().isSelected()) {
+        if (mainView.getSideMenu().getLowCheckBox().isSelected()) {
             displayPriorityGroup("Low",y,model.getTasksByPriority(taskList,3));
         }
     }
 
-    public int displayPriorityGroup(String priority, int y, ArrayList<Task> tasksWithPriority) {
+    private int displayPriorityGroup(String priority, int y, ArrayList<Task> tasksWithPriority) {
         y = createLabel(priority + " Priority", 20, y, 40, false);
         if (tasksWithPriority.isEmpty()) {
             y = createLabel("There are no tasks in this priority group.", 17, y, 30, false);
@@ -112,6 +100,18 @@ public class TaskPane extends Pane {
         header.setText(headerText);
     }
 
+    private int createLabel(String text, int fontSize, int y, int gap, boolean textFillRed) {
+        Label l = new Label(text);
+        l.relocate(20, y);
+        if (textFillRed) {
+            l.setStyle("-fx-font-size: " + fontSize +"px; -fx-font-family: helvetica; -fx-text-fill: rgb(240,0,0);");
+        } else {
+            l.setStyle("-fx-font-size: " + fontSize +"px; -fx-font-family: helvetica;");
+        }
+        getChildren().add(l);
+        return y + gap;
+    }
+
     private int createCheckBox(Task task, boolean isOverdue, int y) {
         TaskCheckBox checkBox = new TaskCheckBox(task.getAction(), task);
         if (isOverdue) {
@@ -123,17 +123,5 @@ public class TaskPane extends Pane {
         getChildren().add(checkBox);
         checkBoxes.add(checkBox);
         return y + 30;
-    }
-
-    private int createLabel(String text, int fontSize, int y, int gap, boolean textFillRed) {
-        Label l = new Label(text);
-        l.relocate(20, y);
-        if (textFillRed) {
-            l.setStyle("-fx-font-size: " + fontSize +"px; -fx-font-family: helvetica; -fx-text-fill: rgb(240,0,0);");
-        } else {
-            l.setStyle("-fx-font-size: " + fontSize +"px; -fx-font-family: helvetica;");
-        }
-        getChildren().add(l);
-        return y + gap;
     }
 }

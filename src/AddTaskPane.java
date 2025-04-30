@@ -2,7 +2,6 @@ import javafx.collections.FXCollections;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-
 import java.time.LocalDate;
 
 public class AddTaskPane extends Pane implements ResettablePane {
@@ -12,79 +11,78 @@ public class AddTaskPane extends Pane implements ResettablePane {
     private DatePicker datePicker;
     private ComboBox categoryComboBox;
     private Button createTaskButton;
-    private Label successLabel;
+    private Label outcomeLabel;
 
     public AddTaskPane(TaskCollection model) {
         this.model = model;
 
-        Label header = new Label("Add Task");
-        header.relocate(235, 170);
-        header.setStyle("-fx-font-size: 25px; -fx-font-family: helvetica;");
+        // header
+        createLabel("Add Task", 235, 170, 25);
 
-        Label actionLabel = new Label("Task:");
-        actionLabel.relocate(150,250);
-        actionLabel.setStyle("-fx-font-size: 18px; -fx-font-family: helvetica;");
-
+        // components for task action input
+        createLabel("Task:", 150, 250, 18);
         actionTextField = new TextField();
         actionTextField.relocate(200,250);
         actionTextField.setPrefSize(225,20);
         actionTextField.setStyle("-fx-font-size: 16px; -fx-font-family: helvetica;");
 
-        Label priorityLabel = new Label("Priority Level:");
-        priorityLabel.relocate(150,315);
-        priorityLabel.setStyle("-fx-font-size: 18px; -fx-font-family: helvetica;");
-
+        // components for task priority level input
+        createLabel("Priority Level:", 150, 315, 18);
         String[] priorities = {"High", "Medium", "Low"};
         priorityComboBox = new ComboBox(FXCollections.observableArrayList(priorities));
-        priorityComboBox.relocate(275, 315);
-        priorityComboBox.setPrefSize(150,20);
-        priorityComboBox.setStyle("-fx-font-size: 16px; -fx-font-family: helvetica;");
-        priorityComboBox.setEditable(false);
+        setComboBox(priorityComboBox, 275, 315, 150);
 
-        Label dateLabel = new Label("Date:");
-        dateLabel.relocate(150,380);
-        dateLabel.setStyle("-fx-font-size: 18px; -fx-font-family: helvetica;");
-
+        // components for task date input
+        createLabel("Date:", 150, 380, 18);
         datePicker = new DatePicker();
         datePicker.relocate(200,380);
         datePicker.setPrefSize(225,20);
         datePicker.setStyle("-fx-font-size: 16px; -fx-font-family: helvetica;");
         datePicker.setEditable(false);
-//        datePicker.setDayCellFactory(picker -> new DateCell() {
-//            public void updateItem(LocalDate date, boolean empty) {
-//                super.updateItem(date, empty);
-//                setDisable(empty || date.compareTo(LocalDate.now()) < 0 );
-//            }
-//        });
+        datePicker.setDayCellFactory(picker -> new DateCell() {
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                setDisable(empty || date.compareTo(LocalDate.now()) < 0 );
+            }
+        });
 
-        Label categoryLabel = new Label("Category:");
-        categoryLabel.relocate(150,445);
-        categoryLabel.setStyle("-fx-font-size: 18px; -fx-font-family: helvetica;");
-
+        // components for task category input
+        createLabel("Category:", 150, 445, 18);
         categoryComboBox = new ComboBox(FXCollections.observableArrayList(model.getCategories()));
-        categoryComboBox.relocate(240,445);
-        categoryComboBox.setStyle("-fx-font-size: 16px; -fx-font-family: helvetica;");
-        categoryComboBox.setPrefSize(185,20);
-        categoryComboBox.setEditable(false);
+        setComboBox(categoryComboBox, 240, 445, 185);
 
+        // button for creating task
         createTaskButton = new Button("Create New Task");
         createTaskButton.relocate(200, 550);
         createTaskButton.setStyle("-fx-font-size: 17px; -fx-font-family: helvetica;");
         createTaskButton.setPrefSize(175, 30);
 
-        successLabel = new Label();
-        successLabel.relocate(200, 650);
-        successLabel.setStyle("-fx-font-size: 16px; -fx-font-family: helvetica;");
-        successLabel.setVisible(false);
+        outcomeLabel = createLabel("", 200, 650, 16);
+        outcomeLabel.setVisible(false);
 
         setStyle("-fx-background-color: rgb(220,220,220)");
-        getChildren().addAll(header, actionLabel, actionTextField, priorityLabel, priorityComboBox, dateLabel, datePicker,
-                categoryLabel, categoryComboBox, createTaskButton, successLabel);
+        getChildren().addAll(actionTextField, priorityComboBox, datePicker, categoryComboBox, createTaskButton);
+    }
+
+    public TextField getActionTextField() {
+        return actionTextField;
+    }
+    public ComboBox getPriorityComboBox() {
+        return priorityComboBox;
+    }
+    public DatePicker getDatePicker() {
+        return datePicker;
+    }
+    public ComboBox getCategoryComboBox() {
+        return categoryComboBox;
+    }
+    public Button getCreateTaskButton() {
+        return createTaskButton;
     }
 
     public void reset() {
         actionTextField.setText("");
-        successLabel.setVisible(false);
+        outcomeLabel.setVisible(false);
         priorityComboBox.getSelectionModel().select(0);
         datePicker.setValue(LocalDate.now());
         categoryComboBox.getSelectionModel().select("Miscellaneous");
@@ -92,15 +90,9 @@ public class AddTaskPane extends Pane implements ResettablePane {
 
     public void displayOutcome(boolean isSuccessful) {
         if (isSuccessful) {
-            successLabel.setText("New task created.");
-            successLabel.setTextFill(Color.rgb(0,155,0));
-            successLabel.relocate(225,650);
-            successLabel.setVisible(true);
+            modifyLabel(outcomeLabel, "New task created.", 225, Color.rgb(0,155,0));
         } else {
-            successLabel.setText("All fields must be filled and no duplicates are allowed.");
-            successLabel.setTextFill(Color.rgb(185,0,0));
-            successLabel.relocate(75,650);
-            successLabel.setVisible(true);
+            modifyLabel(outcomeLabel, "All fields must be filled and no duplicates are allowed.", 100, Color.rgb(185,0,0));
         }
     }
 
@@ -108,23 +100,25 @@ public class AddTaskPane extends Pane implements ResettablePane {
         categoryComboBox.setItems(FXCollections.observableArrayList(model.getCategories()));
     }
 
-    public TextField getActionTextField() {
-        return actionTextField;
+    private Label createLabel(String text, int x, int y, int fontSize) {
+        Label l = new Label(text);
+        l.relocate(x,y);
+        l.setStyle("-fx-font-size: " + fontSize + "px; -fx-font-family: helvetica;");
+        getChildren().add(l);
+        return l;
     }
 
-    public ComboBox getPriorityComboBox() {
-        return priorityComboBox;
+    private void modifyLabel(Label label, String text, int x, Color color) {
+        label.setText(text);
+        label.relocate(x, 650);
+        label.setTextFill(color);
+        label.setVisible(true);
     }
 
-    public DatePicker getDatePicker() {
-        return datePicker;
-    }
-
-    public ComboBox getCategoryComboBox() {
-        return categoryComboBox;
-    }
-
-    public Button getCreateTaskButton() {
-        return createTaskButton;
+    private void setComboBox(ComboBox comboBox, int x, int y, int width) {
+        comboBox.relocate(x,y);
+        comboBox.setPrefSize(width,20);
+        comboBox.setStyle("-fx-font-size: 16px; -fx-font-family: helvetica;");
+        comboBox.setEditable(false);
     }
 }

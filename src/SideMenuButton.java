@@ -1,14 +1,16 @@
 import javafx.scene.control.Button;
+import javafx.scene.paint.Color;
 
-public class CustomButton extends Button {
+public class SideMenuButton extends Button {
     boolean selected;
     int fontSize;
 
-    public CustomButton(String text, int fontSize) {
+    public SideMenuButton(String text, int fontSize) {
         super(text);
         this.fontSize = fontSize;
         selected = false;
         deselect();
+        setTextFill(Color.rgb(190, 190, 190));
     }
 
     public boolean isSelected() {

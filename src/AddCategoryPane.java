@@ -6,61 +6,65 @@ import javafx.scene.paint.Color;
 
 public class AddCategoryPane extends Pane implements ResettablePane {
     private TextField categoryTextField;
-    private Label successLabel;
     private Button createCategoryButton;
+    private Label outcomeLabel;
 
     public AddCategoryPane() {
-        Label header = new Label("Add Category");
-        header.relocate(210, 250);
-        header.setStyle("-fx-font-size: 25px; -fx-font-family: helvetica;");
+        // header
+        createLabel("Add Category", 210, 250, 25);
 
-        Label categoryLabel = new Label("Category Name:");
-        categoryLabel.relocate(150,330);
-        categoryLabel.setStyle("-fx-font-size: 18px; -fx-font-family: helvetica;");
-
+        // components for category input
+        createLabel("Category Name: ", 150, 330, 18);
         categoryTextField = new TextField();
         categoryTextField.relocate(290, 330);
-        categoryTextField.setStyle("-fx-font-size: 16px; -fx-font-family: helvetica;");
         categoryTextField.setPrefSize(135, 20);
+        categoryTextField.setStyle("-fx-font-size: 16px; -fx-font-family: helvetica;");
 
+        // button for creating new category
         createCategoryButton = new Button("Create New Category");
         createCategoryButton.relocate(187.5, 400);
-        createCategoryButton.setStyle("-fx-font-size: 17px; -fx-font-family: helvetica;");
         createCategoryButton.setPrefSize(200, 30);
+        createCategoryButton.setStyle("-fx-font-size: 17px; -fx-font-family: helvetica;");
 
-        successLabel = new Label();
-        successLabel.relocate(200, 500);
-        successLabel.setStyle("-fx-font-size: 16px; -fx-font-family: helvetica;");
-        successLabel.setVisible(false);
+        outcomeLabel = createLabel("", 200, 500, 16);
+        outcomeLabel.setVisible(false);
 
         setStyle("-fx-background-color: rgb(220,220,220)");
-        getChildren().addAll(header, categoryLabel, categoryTextField, createCategoryButton, successLabel);
+        getChildren().addAll(categoryTextField, createCategoryButton);
     }
 
     public TextField getCategoryTextField() {
         return categoryTextField;
     }
-
     public Button getCreateCategoryButton() {
         return createCategoryButton;
     }
 
     public void reset() {
         categoryTextField.setText("");
-        successLabel.setVisible(false);
+        outcomeLabel.setVisible(false);
     }
 
     public void displayOutcome(boolean isSuccessful) {
         if (isSuccessful) {
-            successLabel.setText("New task created.");
-            successLabel.setTextFill(Color.rgb(0,155,0));
-            successLabel.relocate(230,500);
-            successLabel.setVisible(true);
+            modifyLabel(outcomeLabel, "New task created.", 230, 500, Color.rgb(0,155,0));
         } else {
-            successLabel.setText("All fields must be filled and no duplicates are allowed.");
-            successLabel.setTextFill(Color.rgb(185,0,0));
-            successLabel.relocate(100,500);
-            successLabel.setVisible(true);
+            modifyLabel(outcomeLabel, "All fields must be filled and no duplicates are allowed.", 100, 500, Color.rgb(185,0,0));
         }
+    }
+
+    private Label createLabel(String text, int x, int y, int fontSize) {
+        Label l = new Label(text);
+        l.relocate(x,y);
+        l.setStyle("-fx-font-size: " + fontSize + "px; -fx-font-family: helvetica;");
+        getChildren().add(l);
+        return l;
+    }
+
+    private void modifyLabel(Label label, String text, int x, int y, Color color) {
+        label.setText(text);
+        label.relocate(x, y);
+        label.setTextFill(color);
+        label.setVisible(true);
     }
 }
