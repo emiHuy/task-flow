@@ -56,9 +56,7 @@ public class ToDoListApp extends Application {
         view.getTaskPane().getDeleteCategoryButton().setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent actionEvent) {handleDeleteCategoryButton();}
         });
-        primaryStage.setOnCloseRequest(even -> {
-            model.writeData();
-        });
+        primaryStage.setOnCloseRequest(event -> {model.writeData();});
     }
 
     private void linkFilterEventHandler() {
