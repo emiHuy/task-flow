@@ -1,8 +1,10 @@
+import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.TreeSet;
 
 public class TaskCollection implements java.io.Serializable{
+    private static File file = new File("taskCollection.dat");
     private TreeSet<Task> tasks;
     private TreeSet<String> categories;
 
@@ -80,5 +82,28 @@ public class TaskCollection implements java.io.Serializable{
             return true;
         }
         return false;
+    }
+
+    public static TaskCollection readData() {
+        TaskCollection tc = new TaskCollection();
+        try {
+            ObjectInputStream in = new ObjectInputStream(new FileInputStream(file));
+            tc = (TaskCollection)in.readObject();
+            in.close();
+        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+        } catch (ClassNotFoundException e) {
+        }
+        return tc;
+    }
+
+    public void writeData() {
+        try {
+            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
+            out.writeObject(this);
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

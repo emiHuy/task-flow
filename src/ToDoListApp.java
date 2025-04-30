@@ -14,7 +14,7 @@ public class ToDoListApp extends Application {
     ToDoListView view;
 
     public void start(Stage primaryStage) {
-        model = new TaskCollection();
+        model = TaskCollection.readData();
         view = new ToDoListView(model);
 
         view.update(view.getSideMenu().getTodayButton());
@@ -55,6 +55,9 @@ public class ToDoListApp extends Application {
         });
         view.getTaskPane().getDeleteCategoryButton().setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent actionEvent) {handleDeleteCategoryButton();}
+        });
+        primaryStage.setOnCloseRequest(even -> {
+            model.writeData();
         });
     }
 
