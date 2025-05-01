@@ -15,22 +15,22 @@ public class AddCategoryPane extends Pane implements ResettablePane {
 
     public AddCategoryPane() {
         // header
-        createLabel("Add Category", 210, 250, 25);
+        createLabel("Add Category", 210, 50, 25);
 
         // components for category input
-        createLabel("Category Name: ", 150, 330, 18);
+        createLabel("Category: ", 150, 120, 18);
         categoryTextField = new TextField();
-        categoryTextField.relocate(290, 330);
-        categoryTextField.setPrefSize(135, 20);
+        categoryTextField.relocate(240, 120);
+        categoryTextField.setPrefSize(185, 20);
         categoryTextField.setStyle("-fx-font-size: 16px; -fx-font-family: helvetica;");
 
         // button for creating new category
         createCategoryButton = new Button("Create New Category");
-        createCategoryButton.relocate(187.5, 400);
+        createCategoryButton.relocate(187.5, 190);
         createCategoryButton.setPrefSize(200, 30);
         createCategoryButton.setStyle("-fx-font-size: 17px; -fx-font-family: helvetica;");
 
-        outcomeLabel = createLabel("", 200, 500, 16);
+        outcomeLabel = createLabel("", 200, 260, 16);
         outcomeLabel.setVisible(false);
 
         setStyle("-fx-background-color: rgb(220,220,220)");
@@ -51,9 +51,9 @@ public class AddCategoryPane extends Pane implements ResettablePane {
 
     public void displayOutcome(boolean isSuccessful) {
         if (isSuccessful) {
-            modifyLabel(outcomeLabel, "New task created.", 230, 500, Color.rgb(0,155,0));
+            modifyLabel(outcomeLabel, "New task created.", 230, Color.rgb(0,155,0));
         } else {
-            modifyLabel(outcomeLabel, "All fields must be filled and no duplicates are allowed.", 100, 500, Color.rgb(185,0,0));
+            modifyLabel(outcomeLabel, "All fields must be filled and no duplicates are allowed.", 100, Color.rgb(185,0,0));
         }
     }
 
@@ -65,9 +65,9 @@ public class AddCategoryPane extends Pane implements ResettablePane {
         return l;
     }
 
-    private void modifyLabel(Label label, String text, int x, int y, Color color) {
+    private void modifyLabel(Label label, String text, int x, Color color) {
         label.setText(text);
-        label.relocate(x, y);
+        label.relocate(x, 260);
         label.setTextFill(color);
         label.setVisible(true);
     }

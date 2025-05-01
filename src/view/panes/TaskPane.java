@@ -31,7 +31,7 @@ public class TaskPane extends Pane {
         checkBoxes = new ArrayList<TaskCheckBox>();
 
         deleteCategoryButton = new Button("Delete Category");
-        deleteCategoryButton.relocate(405,850);
+        deleteCategoryButton.relocate(405,15);
         deleteCategoryButton.setPrefSize(150,30);
         deleteCategoryButton.setStyle("-fx-font-size: 14px; -fx-font-family: helvetica;");
         deleteCategoryButton.setVisible(false);
