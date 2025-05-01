@@ -32,15 +32,15 @@ public class AddTaskPane extends Pane implements ResettablePane {
         actionTextField.setStyle("-fx-font-size: 16px; -fx-font-family: helvetica;");
 
         // components for task priority level input
-        createLabel("Priority Level:", 150, 315, 18);
+        createLabel("Priority Level:", 150, 300, 18);
         String[] priorities = {"High", "Medium", "Low"};
         priorityComboBox = new ComboBox(FXCollections.observableArrayList(priorities));
-        setComboBox(priorityComboBox, 275, 315, 150);
+        setComboBox(priorityComboBox, 265, 300, 160);
 
         // components for task date input
-        createLabel("Date:", 150, 380, 18);
+        createLabel("Date:", 150, 350, 18);
         datePicker = new DatePicker();
-        datePicker.relocate(200,380);
+        datePicker.relocate(200,350);
         datePicker.setPrefSize(225,20);
         datePicker.setStyle("-fx-font-size: 16px; -fx-font-family: helvetica;");
         datePicker.setEditable(false);
@@ -52,17 +52,17 @@ public class AddTaskPane extends Pane implements ResettablePane {
         });
 
         // components for task category input
-        createLabel("Category:", 150, 445, 18);
+        createLabel("Category:", 150, 400, 18);
         categoryComboBox = new ComboBox(FXCollections.observableArrayList(model.getCategories()));
-        setComboBox(categoryComboBox, 240, 445, 185);
+        setComboBox(categoryComboBox, 240, 400, 185);
 
         // button for creating task
         createTaskButton = new Button("Create New Task");
-        createTaskButton.relocate(200, 550);
+        createTaskButton.relocate(200, 480);
         createTaskButton.setStyle("-fx-font-size: 17px; -fx-font-family: helvetica;");
         createTaskButton.setPrefSize(175, 30);
 
-        outcomeLabel = createLabel("", 200, 650, 16);
+        outcomeLabel = createLabel("", 200, 560, 16);
         outcomeLabel.setVisible(false);
 
         setStyle("-fx-background-color: rgb(220,220,220)");
@@ -115,7 +115,7 @@ public class AddTaskPane extends Pane implements ResettablePane {
 
     private void modifyLabel(Label label, String text, int x, Color color) {
         label.setText(text);
-        label.relocate(x, 650);
+        label.relocate(x, 560);
         label.setTextFill(color);
         label.setVisible(true);
     }
