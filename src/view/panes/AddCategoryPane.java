@@ -51,7 +51,7 @@ public class AddCategoryPane extends Pane implements ResettablePane {
 
     public void displayOutcome(boolean isSuccessful) {
         if (isSuccessful) {
-            modifyLabel(outcomeLabel, "New task created.", 230, Color.rgb(0,155,0));
+            modifyLabel(outcomeLabel, "New category created.", 230, Color.rgb(0,155,0));
         } else {
             modifyLabel(outcomeLabel, "All fields must be filled and no duplicates are allowed.", 100, Color.rgb(185,0,0));
         }
