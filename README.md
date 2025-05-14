@@ -25,22 +25,22 @@ A simple to-do list application that helps users organize tasks and displays the
 ## File and Folder Information
 ### Folders
 #### controller/
-- **ToDoListApp.java** → entry point and controller (event handlers).
+- `ToDoListApp.java` → entry point and controller (event handlers).
 
 #### model/
-- **Task.java** → template for individual task objects.
-- **TaskCollection.java** → collection of tasks.
+- `Task.java` → template for individual task objects.
+- `TaskCollection.java` → collection of tasks.
 
 #### view/
-- **ToDoListView.java** → main view container.
-- **SideMenu.java** → side menu containing buttons and components for displaying UI, and getting sorting and filter choices from the user.
+- `ToDoListView.java` → main view container.
+- `SideMenu.java` → side menu containing buttons and components for displaying UI, and getting sorting and filter choices from the user.
 ##### view/panes/
-- **AddCategoryPane.java** → pane containing input components for category creation.
-- **AddTaskPane.java** → pane containing input components for task creation.
-- **TaskPane.java** → pane for displaying tasks.
+- `AddCategoryPane.java` → pane containing input components for category creation.
+- `AddTaskPane.java` → pane containing input components for task creation.
+- `TaskPane.java` → pane for displaying tasks.
 ##### view/interfaces/
-- **ResettablePane.java** → interface for input panes that need to be reset for the next use and hidden when not in use.
+- `ResettablePane.java` → interface for input panes that need to be reset for the next use and hidden when not in use.
 ##### view/components/
-- **CategoryPane.java** → pane containing category buttons for displaying tasks within a category; part of SideMenu.java.
-- **SideMenuButton.java** → custom buttons for SideMenu.java.
-- **TaskCheckBox.java** → custom checkboxes that hold a reference to their corresponding task objects. 
+- `CategoryPane.java` → pane containing category buttons for displaying tasks within a category; part of SideMenu.java.
+- `SideMenuButton.java` → custom buttons for SideMenu.java.
+- `TaskCheckBox.java` → custom checkboxes that hold a reference to their corresponding task objects. 
